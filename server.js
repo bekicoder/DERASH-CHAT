@@ -21,7 +21,7 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname,"views")))
 
 app.use(express.static(__dirname))
-app.use("/",express.static(path.join(__dirname,"views/Index.html")))
+app.use("/",express.static(path.join(__dirname,"views/index.html")))
 app.use(cookieParser("mysecretkey"))
 function auth(req,res,next){
   const session_id=req.signedCookies.city_admins_session_id || req.headers["x-session-id"];
