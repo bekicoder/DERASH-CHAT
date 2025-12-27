@@ -19,8 +19,8 @@ app.use(express.urlencoded({
 app.use(express.json())
 
 app.use(express.static(path.join(__dirname,"views")))
-
 app.use(express.static(__dirname))
+app.use(express.static(__dirname + '/public'));
 app.use("/",express.static(path.join(__dirname,"views/index.html")))
 app.use(cookieParser("mysecretkey"))
 function auth(req,res,next){
