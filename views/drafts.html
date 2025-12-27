@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+  
+  <script>
+    messages.forEach(msg => {
+    // Create elements
+    const container1 = document.createElement("div");
+    const container2 = document.createElement("div");
+    const proPic = document.createElement("div");
+    const infoContainer = document.createElement("div");
+    const senderInfo = document.createElement("div");
+    const titleContainer = document.createElement("h1");
+    const descContainer = document.createElement("p");
+
+    // Add classes
+    container1.classList.add(
+      "border-b", "border-b-gray-200", "flex", "flex-row",
+      "items-start", "w-full", "gap-3", "py-4", "message"
+    );
+
+    container2.classList.add("flex", "flex-col", "flex-1", "min-w-0");
+
+    proPic.classList.add("w-12","h-12","aspect-square","rounded-full","flex-none", "text-2xl","font-medium", "flex","justify-center", "items-center","text-white",`bg-[${msg.color}]`);
+
+    infoContainer.classList.add("flex", "flex-col", "flex-1", "min-w-0");
+
+    senderInfo.classList.add("flex", "justify-between", "items-center", "mb-1");
+
+    titleContainer.classList.add("text-gray-900", "font-medium", "truncate");
+
+    descContainer.classList.add("text-sm", "text-gray-600", "truncate-2-lines", "mt-1");
+
+    // Fill text
+    titleContainer.textContent = msg.title;
+    descContainer.textContent = msg.message;
+    proPic.textContent=msg.name.substr(0,1);
+    // Sender info
+    senderInfo.innerHTML = `
+      <span class="font-medium text-lg">${msg.name}</span>
+      <span class="text-gray-700 text-sm">Yesterday</span>
+    `;
+
+    // Build structure
+    infoContainer.appendChild(senderInfo);
+    infoContainer.appendChild(titleContainer);
+    infoContainer.appendChild(descContainer);
+
+    container1.appendChild(proPic);
+    container1.appendChild(infoContainer);
+  container1.addEventListener("click",()=>{
+    console.log(JSON.stringify(msg.id))
+    opendMsg=msg.email
+    opendMsgId=msg.id
+    senderName.textContent=msg.name
+    repMsg_id_input.value=msg.id
+    document.querySelector("#msgTitle").textContent=msg.title
+    
+    if(msg.type==="personal"){
+      senderEmail.textContent=msg.email
+    }
+    else{
+      senderEmail.textContent=msg.org_email
+    }
+    senderPhone.textContent=msg.phone_number
+    desContainer.textContent=msg.message
+    senderLocation.textContent=msg.location
+    messageShow.classList.remove("hidden")     
+    messagesContainer.classList.add("hidden") 
+    const date=new Date(msg.sent_date)
+    const options = {
+  weekday: "short", // "Mon", "Tue", etc.
+  month: "short",   // "Jan", "Feb", "Mar", etc.
+  day: "numeric"    // "1", "2", ..., "31"
+};
+
+  const formatted = date.toLocaleDateString("en-US", options);
+  sentDate.textContent=formatted
+  })
+    // Append to page
+  container1.addEventListener("mousedown",()=>{
+  
+  })
+    messagesContainer.appendChild(container1);
+  });
+  </script>
+</body>
+</html>

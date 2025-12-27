@@ -1,0 +1,88 @@
+.help_paper {
+  animation: vibrate 0.8s linear infinite alternate;
+}
+
+@keyframes vibrate{
+  0%{
+    transform:rotate(0deg);
+  }
+  20%{
+    transform: rotate(5deg);
+  }
+  40%{
+    transform: rotate(-5deg);
+  }
+  60%{
+    transform: rotate(-5deg);
+  }
+  80%{
+    transform: rotate(0deg);
+  }
+}
+
+
+
+.paper1{
+  animation: animate 1.5s linear infinite;
+  
+}
+@keyframes animate{
+  from{
+    top:-100%;
+  }
+  to{
+    top: 100%;
+  }
+}
+
+.paper2{
+  animation: animate_paper1 1.3s linear infinite;
+  
+}
+@keyframes animate_paper1{
+  from{
+    top:-150%;
+  }
+  to{
+    top: 100%;
+  }
+}
+
+.paper3{
+  animation: animate_paper3 1s linear infinite;
+  
+}
+@keyframes animate_paper3{
+  from{
+    top:-180%;
+  }
+  to{
+    top: 100%;
+  }
+}
+
+.paper4{
+  animation: animate_paper4 1.5s linear infinite;
+  
+}
+@keyframes animate_paper4{
+  from{
+    top:-200%;
+  }
+  to{
+    top: 100%;
+  }
+}
+
+.documents_paper {
+  animation: showDocuments 2s linear infinite alternate both;
+}
+
+@keyframes showDocuments {
+  from {
+    transform: translateX(30%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}

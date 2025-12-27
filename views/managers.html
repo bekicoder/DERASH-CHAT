@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Fixed Notification Layout</title>
+   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <style>
+     /* Additional custom styles for better text truncation */
+     .truncate-2-lines {
+       display: -webkit-box;
+       -webkit-line-clamp: 2;
+       -webkit-box-orient: vertical;
+       overflow: hidden;
+     }
+     .message * {
+  pointer-events: none;
+}
+   </style>
+</head>
+<body class="bg-gray-50">
+
+  <header class="h-15 bg-amber-00 border-b border-b-gray-400 flex justify-between items-center px-1">
+          <label for="offcanvas-control" class=" cursor-pointer md:hidden">
+        <svg width="40" height="40" viewBox="-20 -20 40 40">
+          <path d="M -9 0 L 10 0 M -9 -7 L 10 -7 M -9 7 L 10 7"
+            stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </label>
+      
+  <div class="relative w-full">  
+        <input type="text" id="searchSkill" class="hidden w-full h-12 border border-gray-400 rounded-full pl-7 pr-8" placeholder="Search Notifications" title="Please select at least ">  
+                <button id="clearSearch" class="text-gray-400 hover:text-gray-600 transition duration-200 absolute top-[50%] right-0 translate-y-[-50%] pr-3 h-full w-9 bgamber-500" type="button">
+                    
+        <i class="fas fa-search text-gray-500 absolute top-[50%] right-2 translate-y-[-50%]"></i>  
+        </button>  
+        
+        </div>  
+
+  </header>
+  
+  <div class="flex flex-row items-stretch h-screen">
+    <nav class="bg-amber-500 absolute top-0 left-0 fixed top-0 right-0 flex flex-row items-center justify-between z-[1000] bg-white w-max md:h-full md:relative md:-top-15">
+      <!-- Highlight box -->
+
+      <!-- Hamburger menu -->
+      <input type="checkbox" id="offcanvas-control" class="hidden peer"/>
+      <label id="overlay" for="offcanvas-control" class="w-screen h-screen absolute top-0 left-0 hidden peer-checked:block bg-black/50"></label>
+
+
+
+      <!-- Offcanvas nav -->
+      <div class="nav-links flex flex-col w-[300px] h-screen md:h-full absolute top-0 left-0 justify-start items-start text-black transition duration-500 ease-out translate-x-[-100%] peer-checked:translate-x-0 md:relative md:translate-x-0 h-screen md:relative bg-white md:border-r md:border-r-gray-400">
+        <div class="h-15 w-full border-b border-b-gray-400 flex items-center px-2 gap-2">
+              <h1 class="text-3xl font-bold mx-4 text-blue flex gap-1">Derash <span class="w-3 h-3 rounded-full bg-blue-600 block my-auto"></span></h1> 
+        </div>
+        
+        <ul class="space-y-2 mt-5 pl-8">
+          <li>
+            <a href="/" class="flex items-center p-3 text-sm font-medium rounded-lg text-gray-500 hover:bg-primary-50 hover:text-primary-700 navLink">
+              <i class="fas fa-home mr-3"></i>
+              <p>Home</p>
+            </a>
+          </li>
+          <li>
+            <a class="allBtn flex items-center p-3 text-sm font-medium rounded-lg text-gray-500 hover:bg-primary-50 hover:text-primary-700 navLink">
+              <i class="fas fa-briefcase mr-3"></i>
+              <p>All</p>
+            </a>
+          </li>
+          <li class="unreadBtn flex items-center p-3 text-sm font-medium rounded-lg text-gray-500 hover:bg-primary-50 hover:text-primary-700 gap-2 navLink">
+              <i class="fas fa-comments mr-3"></i>
+              <p>Unread</p>
+<button class="unreadAmount bg-red-500 text-white text-xs rounded-full inline-flex items-center justify-center px-1 py-0.5 min-w-[1.25rem] aspect-square">
+  0
+</button>
+          </li>
+          <li class="archivedBtn flex items-center p-3 text-sm font-medium rounded-lg bg-primary-500 text-primary-700 bg-red-00 justify-start w-full gap-3 flex-1 navLink">
+              <i class="fas fa-bell mr-3"></i>
+              <p>Archived</p>
+<button class="archivedAmount bg-red-500 text-white text-xs rounded-full inline-flex items-center justify-center px-1 py-0.5 min-w-[1.25rem] aspect-square">
+  0
+</button>
+          </li>
+          <li>
+            <a class="messagesLink flex items-center p-3 text-sm font-medium rounded-lg text-gray-500 hover:bg-primary-50 hover:text-primary-700 navLink">
+              <i class="fas fa-chart-bar mr-3"></i>
+              <p>Messages</p>
+            </a>
+          </li>
+          <li>
+            <a class="draftsLink flex items-center p-3 text-sm font-medium rounded-lg text-gray-500 hover:bg-primary-50 hover:text-primary-700 navLink">
+              <i class="fas fa-wallet mr-3"></i>
+              <p>Drafts</p>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center p-3 text-sm font-medium rounded-lg text-gray-500 hover:bg-primary-50 hover:text-primary-700 navLink">
+              <i class="fas fa-cog mr-3"></i>
+              <p>Settings</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    
+    <div class="flex flex-col flex-1 overflow-hidden messagesContainer">
+      <!-- Filter top btns -->
+      <div class="flex flex-row justify-center gap-1 sm:gap-4 md:gap-10 py-4">
+        <button class="allBtn py-2 px-7 rounded-full border-1 border-gray-400 font-bold">All</button>
+        <button class="unreadBtn py-2 px-7 rounded-full font-bold border-1 border-gray-400 ">Unread</button>
+        <button class="archivedBtn py-2 px-7 rounded-full font-bold border-1 border-gray-400 ">Archived</button>
+        <button class="">
+          <span class="fa-stack">
+            <!-- Circle background -->
+            <i class="fa-regular fa-circle fa-stack-2x"></i>
+            <!-- Double check on top -->
+            <i class="fa-solid fa-check-double fa-stack-1x"></i>
+          </span>
+        </button>
+      </div>
+      
+      <h1 class="text-2xl font-medium mt-4 ml-4 sm:ml-10 md:ml-20">Messages</h1>
+      <p class="text-gray-600 ml-4 text-sm mb-7 sm:ml-10 md:ml-20">Manage your messages and updates</p>
+      
+      <div class="flex flex-col flex-1 md:border md:border-gray-500 rounded-2xl min-[950px]:mx-20 pt-4 overflow-hidden mb-15">
+        <!-- Notification container with proper constraints -->
+        <div class="flex flex-col overflow-y-auto px-4 pb-4">
+  <!--messages-->        
+          <div class="flex flex-col overflow-y-auto px-4 pb-4 messages"></div>
+        
+  <!--messages show--> 
+  
+
+
+<div id="messageShow" class="max-md:w-screen max-md:h-screen bg-gray-50 max-md:fixed max-md:top-0 max-md:left-0 z-2000 p-4 pb-12 overflow-y-auto  flex flex-col transition duration-1000 ease-out hidden">
+    <button class="mr-auto mb-7 hideMsgContainer">
+ <i class="fa-solid fa-arrow-left text-2xl"></i>
+    </button>
+    
+<div class="flex w-full justify-end">
+ <p id="sentDate"></p> 
+ 
+</div><br>
+<h1 id="msgTitle" class="text-2xl font-medium mb-4"></h1>
+<div  id="desContainer" class="break-words"></div><br>
+ <div class="flex gap-2 flex flex-col mb-2 mt-auto">
+    <h1 id="senderName" class="ml-auto text-lg mr-2"></h1> 
+   <div>
+     <button class=" bg-gray-800 w-8 aspect-square rounded-full text-white">
+<i class="fa-solid fa-phone "></i>
+     </button>
+     <span id="senderPhone"></span>
+   </div>
+   <div>
+     <button class=" bg-gray-800 w-8 aspect-square rounded-full text-white">
+<i class="fa-solid fa-envelope "></i>
+     </button>
+     <span id="senderEmail"></span>
+   </div>
+   <div>
+     <button class=" bg-gray-800 w-8 aspect-square rounded-full text-white">
+    <i class="fas fa-map-marker-alt"></i>
+     </button>
+     <span id="senderLocation"></span>
+   </div>
+  <div class="w-full flex justify-around mt-4">
+    <button class="px-8 py-2 bg-blue-600 text-white rounded-full">&larr; Forward</button>
+    <button id="replaybtn" class="px-8 py-2 bg-blue-600 text-white rounded-full">Replay &rarr;</button>
+  </div>
+ </div> 
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<div class="h-fit w-fit max-md:w-screen max-md:h-screen bg-gray-50 max-md:fixed max-md:top-0 max-md:left-0 md:w-full z-4000000 replyContainer hidden">
+  
+  <form id="replayForm">
+  <button type="button" class="mr-auto ml- hideReplyContainer ml-7 mt-3">
+ <i class="fa-solid fa-arrow-left text-2xl"></i>
+    </button>
+  <div class="mb-7">
+    <h1 class="py-5 border-b px-7 border-b-gray-300 text-[18px] text-lg fromRep">From: </h1>
+    <input type="text" class="repMsg_id_input sr-only" name="msg_id">
+    <input class="toInput sr-only" name="toRep">
+    <input class="fromInput sr-only" name="fromRep">
+    
+   <div id="replyTo" class="py-5 border-b px-7 border-b-gray-300 text-[18px] flex text-lg flex">
+    <h1>To:</h1>
+     <button type="button" class="bg-blue-100 px-2 rounded-full ml-auto text-sm font-medium reback">Reback</button>  
+      </div>
+  </div>
+  
+<div class="px-7">
+
+    <textarea class="w-full resize-none h-50 focus:outline-blue-600 outline-1 outline-gray-300 rounded-md mt-2 p-2 repDescription" name="repDescription" required placeholder="Replay...."></textarea>
+    
+    <button type="submit" class="px-10 py-2 bg-blue-600 text-white font-medium  rounded-full my-4">Reply</button>
+</div>
+  </form>
+  
+   <div class="px-7 flex justify-center bg-black/20 w-screen fixed top-0 left-0 pt-28 reciever_container transition duration-400 translate-y-full">
+    
+  <div class="h-screen bg-white flex items-center pt-2 flex-col flex-1 rounded-lg max-w-xl pb-32 relative reciever_popup px-2">
+    <button class=" bg-blue-600/80 rounded-full text-white absolute w-12 aspect-square bottom-[101%] hide_chooser">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <input class="border-none flex-none h-fit px-5 py-2 rounded-lg focus:outline-blue-600 outline-1 outline-gray-400 rounded-md w-full org_search">
+    
+    <div class="w-full pt-10 flex flex-col gap-4 overflow-y-auto organizationsContainer">
+
+    </div>
+    
+  </div>
+  </div>  
+  
+</div>  
+
+  <div class="flex flex-col flex-1 overflow-hidden draftsContainer hidden">
+    
+    <div class="flex flex-col flex-1 md:border md:border-gray-500 rounded-2xl min-[950px]:mx-20 pt-4 overflow-hidden mb-15">
+            <h1 class="text-2xl font-medium mt-4 ml-4 sm:ml-10 md:ml-20">Drafts</h1>
+      <p class="text-gray-600 ml-4 text-sm mb-7 sm:ml-10 md:ml-20">Manage your drafts and updates</p>
+     
+     <div class="drafts flex flex-col overflow-y-auto px-4 pb-4">
+       
+     </div> 
+    </div>
+    
+
+  </div>
+  
+  </div>
+  
+  
+   <div class="w-screen bg-gray-900 text-white p-3 flex flex-col gap-4 md:flex-row border-none py-8">
+    <div class="flex flex-col gap-4 flex-1">
+<h1 class="text-3xl font-bold text-blue flex gap-1 ">Derash <span class="w-3 h-3 rounded-full bg-blue-600 block my-auto"></span></h1> 
+   <small class="text-gray-400">
+     Derash is a digtal message and compliant sending platform. Mainly focused for organizations data exchange safely</small>
+    </div>
+    <div class="flex flex-col gap-4 flex-1">
+    <h1 class="text-xl font-bold">
+      Receive notifications and Get Notified</h1> 
+      <p class="text-gray-500">
+        Subscribe newsletter and get recent news and offers.</p>
+    <div class="relative">
+      <input type="email" class="py-4 border border-white w-full rounded-xl pr-34 pl-2" placeholder="you@example.com">
+      <button class="p-2 bg-indigo-500 absolute top-2 right-2 rounded-xl px-5">Get Notified</button>
+    </div>
+     </div>
+     <div class="flex flex-1 md:justify-center">
+    <div class="flex flex-col gap-4 md:w-max">
+    <strong class="text-xl my-2">Link</strong>
+      <a class="text-gray-400">Licenses</a>
+      <a class="text-gray-400">Privacy Policy</a>
+      <a class="text-gray-400">Contact</a>
+      
+    </div>
+     </div>
+    <div class="flex flex-col gap-4 flex-1">
+    <strong class="text-xl my-2">Information</strong>
+    <a class="text-gray-400">About Us</a>
+    <a class="text-gray-400">Our Team</a>
+    <a class="text-gray-400">Our Services</a>
+    </div>
+  </div>
+  <div class="pointer-events-none w-screen py-4 bg-gray-900 text-white text-center flex flex-col px-4">
+  <span class="w-full h-[1px] bg-gray-200 mb-4 md:hidden"></span>
+    © 2025 Derash. All Rights Reserved.
+
+  </div> 
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const archivedAmount=document.querySelector(".archivedAmount")
+    const archivedBtn=document.querySelectorAll(".archivedBtn")
+    const unreadBtn=document.querySelectorAll(".unreadBtn")
+    const unreadAmount=document.querySelector(".unreadAmount")
+    const allBtn=document.querySelectorAll(".allBtn")
+    const messagesLink=document.querySelector(".messagesLink")
+    const draftsDisplay=document.querySelector(".drafts")
+    const draftsLink=document.querySelector(".draftsLink")
+    const draftsContainer=document.querySelector(".draftsContainer")
+    const messagesParent=document.querySelector(".messagesContainer")
+    const messagesContainer=document.querySelector(".messages")
+    const messageShow=document.getElementById("messageShow")
+    const desContainer=document.querySelector("#desContainer")
+    const toInput=document.querySelector(".toInput")
+    const fromRep=document.querySelector(".fromRep")
+    const fromInput=document.querySelector(".fromInput")
+    const repMsg_id_input=document.querySelector(".repMsg_id_input")
+    const sentOrg=document.getElementById("sentOrg")
+    const sentDate=document.getElementById("sentDate")
+    const senderName=document.getElementById("senderName")
+    const senderPhone=document.getElementById("senderPhone")
+    const senderEmail=document.getElementById("senderEmail")
+    const senderLocation=document.getElementById("senderLocation")
+   
+   const orgInfo_res=await fetch("/userInfo",{
+      method:"POST"
+    })
+  let userInfo = await orgInfo_res.json()    
+
+let opendMsg;
+let opendMsgId;
+let readTimer=0;
+let setReadTimer;
+let messages;
+let recentMsgId=0;
+let archives=false
+//====display messages ====//
+  async function fetchMessages() {
+  messagesContainer.innerHTML = "";
+ unreadAmount.textContent=""
+  const msgData = await fetch("/getAllMessages", { 
+    method: "POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({page:"manage"})
+  });
+  messages = await msgData.json();
+  archivedAmount.textContent=""
+  messages.forEach(msg => {
+    if (Number(msg.id) > recentMsgId) recentMsgId = Number(msg.id);
+
+    // Create elements
+    const container1 = document.createElement("div");
+    const proPic = document.createElement("div");
+    const infoContainer = document.createElement("div");
+    const senderInfo = document.createElement("div");
+    const titleContainer = document.createElement("h1");
+    const descContainer = document.createElement("p");
+
+    // Main container
+    container1.classList.add(
+      "border-b","border-b-gray-200","flex","flex-row",
+      "items-start","w-full","gap-3","py-4","message"
+    );
+    
+    if (msg.archived === "true"){ 
+      archivedAmount.textContent=Number(archivedAmount.textContent)+1
+      container1.classList.add("hidden");
+    }
+
+    // Children — pointer-events disabled globally by CSS
+    proPic.classList.add(
+      "w-12","h-12","rounded-full","flex","justify-center","items-center",
+      "text-white","text-2xl","font-medium",`bg-[${msg.color}]`
+    );
+    proPic.textContent = msg.name[0];
+
+    infoContainer.classList.add("flex","flex-col","flex-1","min-w-0");
+    senderInfo.classList.add("flex","justify-between","items-center","mb-1");
+    titleContainer.classList.add("text-gray-900","font-medium","truncate");
+    descContainer.classList.add("text-sm","text-gray-600","truncate-2-lines","mt-1");
+
+    // Fill text
+    titleContainer.textContent = msg.title;
+    descContainer.textContent = msg.message;
+
+    // read/unread indicator
+    const date = new Date(msg.sent_date);
+    const DateString=date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  });
+      if(msg.read === "true"){
+     senderInfo.innerHTML = `<span class="font-medium text-lg">${msg.name}</span>
+        <span class="text-gray-700 text-sm">${DateString}</span>`
+      }
+      else{ 
+        senderInfo.innerHTML = `<span class="font-medium text-lg flex items-center gap-2">
+          ${msg.name}<span class="w-2 h-2 bg-red-500 rounded-full"></span>
+        </span>
+        <span class="text-gray-700 text-sm">${DateString}</span>`
+        unreadAmount.textContent=Number(unreadAmount.textContent)+1  
+}
+    // build DOM
+    infoContainer.appendChild(senderInfo);
+    infoContainer.appendChild(titleContainer);
+    infoContainer.appendChild(descContainer);
+    container1.appendChild(proPic);
+    container1.appendChild(infoContainer);
+
+    // ------------------------------
+    // CLICK & DOUBLE-CLICK FIXED LOGIC
+    // ------------------------------
+    let clickTimer = null;
+    let isArchived=JSON.parse(msg.archived)
+    // Single Click = OPEN MESSAGE
+    container1.addEventListener("click", () => {
+      if(msg.read==="true")unreadAmount.textContent=Number(unreadAmount.textContent)-1
+      
+      console.log(unreadAmount.textContent)
+      if (clickTimer) clearTimeout(clickTimer);
+
+      clickTimer = setTimeout(() => {
+        openMessage(msg);
+        clickTimer = null;
+      }, 450); // delay so dblclick can cancel it
+    });
+
+    let isAll=false
+    // Double Click = ARCHIVE
+    container1.addEventListener("dblclick", async () => {
+      if (clickTimer) clearTimeout(clickTimer);
+      console.log(isArchived,JSON.parse(msg.archived))
+    if(msg.archived==="false" && !isArchived){
+      const isAgreed = confirm("Do you want to archive?");
+      if (!isAgreed) return;
+     archivedAmount.textContent=Number(archivedAmount.textContent)+1
+      const res = await fetch(`/checkAsArchived`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ msg_serial: msg.id,archive:"true" })
+      });
+
+      const data = await res.json();
+      if (data.message === "succesfull") {
+        container1.classList.add("hidden");
+      }
+    }
+    else{
+      const isAgreed = confirm("Do you want to restore from archive ?");
+      if (!isAgreed) return;
+    console.log("how are you",Number(archivedAmount.textContent)-1)
+    archivedAmount.textContent=Number(archivedAmount.textContent)-1
+      const res = await fetch(`/checkAsArchived`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ msg_serial: msg.id,archive:"false" })
+      });
+
+      const data = await res.json();
+      if (data.message === "succesfull" && isAll===false) {
+        container1.classList.add("hidden");
+      }
+    }
+    console.log(isArchived,"hi")
+    isArchived=!isArchived
+    console.log(isArchived,"hi")
+    });
+
+    // FILTER BUTTONS
+    allBtn.forEach(btn =>
+      btn.addEventListener("click",function(){
+        document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="reply"
+   messagesParent.classList.remove("hidden")
+   draftsContainer.classList.add("hidden")
+        isAll=true
+        allBtn[1].classList.add("bg-blue-600")
+        allBtn[1].classList.add("text-white")
+        unreadBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+        archivedBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+        container1.classList.remove("hidden");
+        document.querySelectorAll(".navLink").forEach((link,index,array)=>{
+    array.forEach(linkBtn=>{
+      linkBtn.classList.remove("text-gray-500","scale-110")
+      linkBtn.classList.add("text-gray-500")
+    }) 
+      })  
+      allBtn[0].classList.remove("text-gray-500")
+      })
+    );
+
+    unreadBtn.forEach(btn =>
+      btn.addEventListener("click", function(){
+        document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="reply"
+   messagesParent.classList.remove("hidden")
+   draftsContainer.classList.add("hidden")
+        unreadBtn[1].classList.add("bg-blue-600")
+        unreadBtn[1].classList.add("text-white")
+        allBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+        archivedBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+        container1.classList.remove("hidden");
+        if (msg.read !== "false") container1.classList.add("hidden");
+        document.querySelectorAll(".navLink").forEach((link,index,array)=>{
+    array.forEach(linkBtn=>{
+      linkBtn.classList.remove("text-gray-500","scale-110")
+      linkBtn.classList.add("text-gray-500")
+    }) 
+      })  
+       unreadBtn[0].classList.remove("text-gray-500")
+      })
+    );
+
+    archivedBtn.forEach(btn =>
+      btn.addEventListener("click", function(){
+        document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="reply"
+   messagesParent.classList.remove("hidden")
+   draftsContainer.classList.add("hidden")
+        isAll=false
+        archivedBtn[1].classList.add("bg-blue-600")
+        archivedBtn[1].classList.add("text-white")
+        unreadBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+        allBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+        container1.classList.remove("hidden");
+        console.log(msg.archived === "false",isArchived===false)
+        if (msg.archived === "false" && isArchived===false){
+          container1.classList.add("hidden");
+        }
+      document.querySelectorAll(".navLink").forEach((link,index,array)=>{
+    array.forEach(linkBtn=>{
+      linkBtn.classList.remove("text-gray-500","scale-110")
+      linkBtn.classList.add("text-gray-500")
+    }) 
+      })  
+      archivedBtn[0].classList.remove("text-gray-500")  
+      })
+    );
+
+    messagesContainer.appendChild(container1);
+  });
+}
+// -------------------------------------
+// OPEN MESSAGE FUNCTION (clean + fast)
+// -------------------------------------
+function openMessage(msg) {
+  fetch(`/checkAsRead`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ msg_serial: msg.id })
+  });
+
+  opendMsg = msg.email;
+  opendMsgId = msg.id;
+
+  senderName.textContent = msg.name;
+  repMsg_id_input.value = msg.id;
+  document.querySelector("#msgTitle").textContent = msg.title;
+
+  senderEmail.textContent = msg.type === "personal" ? msg.email : msg.org_email;
+  senderPhone.textContent = msg.phone_number;
+  desContainer.textContent = msg.message;
+  senderLocation.textContent = msg.location;
+
+  const date = new Date(msg.sent_date);
+  sentDate.textContent = date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  });
+
+  messageShow.classList.remove("hidden");
+  messagesContainer.classList.add("hidden");
+}
+  await fetchMessages()
+  
+  setInterval(async()=>{
+  const msgresult = await fetch("/getAllMessages", { 
+    method: "POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({page:"manage"})
+  });
+  let msgRes = await msgresult.json();  
+  if(msgRes.length > messages.length){
+    msgRes.forEach(msg => {
+    if (Number(msg.id) > recentMsgId){ 
+    recentMsgId = Number(msg.id);
+
+    // Create elements
+    const container1 = document.createElement("div");
+    const proPic = document.createElement("div");
+    const infoContainer = document.createElement("div");
+    const senderInfo = document.createElement("div");
+    const titleContainer = document.createElement("h1");
+    const descContainer = document.createElement("p");
+
+    // Main container
+    container1.classList.add(
+      "border-b","border-b-gray-200","flex","flex-row",
+      "items-start","w-full","gap-3","py-4","message"
+    );
+    if (msg.archived === "true"){ 
+      archivedAmount.textContent=Number(archivedAmount.textContent)+1
+      container1.classList.add("hidden");
+    }
+
+    // Children — pointer-events disabled globally by CSS
+    proPic.classList.add(
+      "w-12","h-12","rounded-full","flex","justify-center","items-center",
+      "text-white","text-2xl","font-medium",`bg-[${msg.color}]`
+    );
+    proPic.textContent = msg.name[0];
+
+    infoContainer.classList.add("flex","flex-col","flex-1","min-w-0");
+    senderInfo.classList.add("flex","justify-between","items-center","mb-1");
+    titleContainer.classList.add("text-gray-900","font-medium","truncate");
+    descContainer.classList.add("text-sm","text-gray-600","truncate-2-lines","mt-1");
+
+    // Fill text
+    titleContainer.textContent = msg.title;
+    descContainer.textContent = msg.message;
+
+    // read/unread indicator
+    const date = new Date(msg.sent_date);
+    const DateString=date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  });
+      if(msg.read === "true"){
+     senderInfo.innerHTML = `<span class="font-medium text-lg">${msg.name}</span>
+        <span class="text-gray-700 text-sm">${DateString}</span>`
+      }
+      else{ 
+        senderInfo.innerHTML = `<span class="font-medium text-lg flex items-center gap-2">
+          ${msg.name}<span class="w-2 h-2 bg-red-500 rounded-full"></span>
+        </span>
+        <span class="text-gray-700 text-sm">${DateString}</span>`
+        unreadAmount.textContent=Number(unreadAmount.textContent)+1  
+}
+    // build DOM
+    infoContainer.appendChild(senderInfo);
+    infoContainer.appendChild(titleContainer);
+    infoContainer.appendChild(descContainer);
+    container1.appendChild(proPic);
+    container1.appendChild(infoContainer);
+
+    // ------------------------------
+    // CLICK & DOUBLE-CLICK FIXED LOGIC
+    // ------------------------------
+    let clickTimer = null;
+    let isArchived=JSON.parse(msg.archived)
+    // Single Click = OPEN MESSAGE
+    container1.addEventListener("click", () => {
+
+      
+      console.log(unreadAmount.textContent)
+      if (clickTimer) clearTimeout(clickTimer);
+
+      clickTimer = setTimeout(() => {
+        openMessage(msg);
+        clickTimer = null;
+      }, 550); // delay so dblclick can cancel it
+    });
+
+    let isAll=false
+    // Double Click = ARCHIVE
+    container1.addEventListener("dblclick", async () => {
+      if (clickTimer) clearTimeout(clickTimer);
+      console.log(isArchived,JSON.parse(msg.archived))
+    if(msg.archived==="false" && !isArchived){
+      const isAgreed = confirm("Do you want to archive?");
+      if (!isAgreed) return;
+     archivedAmount.textContent=Number(archivedAmount.textContent)+1
+      const res = await fetch(`/checkAsArchived`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ msg_serial: msg.id,archive:"true" })
+      });
+
+      const data = await res.json();
+      if (data.message === "succesfull") {
+        container1.classList.add("hidden");
+      }
+    }
+    else{
+      const isAgreed = confirm("Do you want to restore from archive ?");
+      if (!isAgreed) return;
+    console.log("how are you",Number(archivedAmount.textContent)-1)
+    archivedAmount.textContent=Number(archivedAmount.textContent)-1
+      const res = await fetch(`/checkAsArchived`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ msg_serial: msg.id,archive:"false" })
+      });
+
+      const data = await res.json();
+      if (data.message === "succesfull" && isAll===false) {
+        container1.classList.add("hidden");
+      }
+    }
+    isArchived=!isArchived
+    console.log(isArchived,"hi")
+    });
+
+    // FILTER BUTTONS
+    allBtn.forEach(btn =>
+      btn.addEventListener("click",function(){
+        document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="reply"
+   messagesParent.classList.remove("hidden")
+   draftsContainer.classList.add("hidden")
+        isAll=true
+        allBtn[1].classList.add("bg-blue-600")
+        unreadBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600")
+        })
+        archivedBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600")
+        })
+        container1.classList.remove("hidden");
+        document.querySelectorAll(".navLink").forEach((link,index,array)=>{
+    array.forEach(linkBtn=>{
+      linkBtn.classList.remove("text-gray-500","scale-110")
+      linkBtn.classList.add("text-gray-500")
+    }) 
+      })  
+      allBtn[0].classList.remove("text-gray-500")
+      })
+    );
+
+    unreadBtn.forEach(btn =>
+      btn.addEventListener("click", function(){
+        document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="reply"
+   messagesParent.classList.remove("hidden")
+   draftsContainer.classList.add("hidden")
+        unreadBtn[1].classList.add("bg-blue-600")
+        allBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600")
+        })
+        archivedBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600")
+        })
+        container1.classList.remove("hidden");
+        if (msg.read !== "false") container1.classList.add("hidden");
+        document.querySelectorAll(".navLink").forEach((link,index,array)=>{
+    array.forEach(linkBtn=>{
+      linkBtn.classList.remove("text-gray-500","scale-110")
+      linkBtn.classList.add("text-gray-500")
+    }) 
+      })  
+       unreadBtn[0].classList.remove("text-gray-500")
+      })
+    );
+
+    archivedBtn.forEach(btn =>
+      btn.addEventListener("click", function(){
+        document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="reply"
+   messagesParent.classList.remove("hidden")
+   draftsContainer.classList.add("hidden")
+        isAll=false
+        archivedBtn[1].classList.add("bg-blue-600")
+        unreadBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600")
+        })
+        allBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600")
+        })
+        container1.classList.remove("hidden");
+        console.log(msg.archived === "false",isArchived===false)
+        if (msg.archived === "false" && isArchived===false){
+          container1.classList.add("hidden");
+        }
+      document.querySelectorAll(".navLink").forEach((link,index,array)=>{
+    array.forEach(linkBtn=>{
+      linkBtn.classList.remove("text-gray-500","scale-110")
+      linkBtn.classList.add("text-gray-500")
+    }) 
+      })  
+      archivedBtn[0].classList.remove("text-gray-500")  
+      })
+    );
+    
+    messagesContainer.prepend(container1);
+    }
+  }); 
+   }
+  },5000)
+  //==== display drafts ====//
+ 
+ const replayForm=document.getElementById("replayForm")
+const reciever_container=document.querySelector(".reciever_container")
+const replyContainer=document.querySelector(".replyContainer")
+const reback=document.querySelector(".reback")
+let choosenOrg;
+
+ document.querySelector("#replyTo").addEventListener("click",async(e)=>{
+    if(!e.target.classList.contains("reback")){
+   const response=await fetch("/getOrganizations",{
+     method:"POST"
+   })
+   const organizations=await response.json()
+   document.querySelector(".organizationsContainer").innerHTML=""
+   organizations.forEach(organization=>{
+   const container=document.createElement("div")
+   const ProPic=document.createElement("div")
+   const orgName=document.createElement("h1")
+   container.classList.add("organization","p-1","border-b-gray-400","border-b","rounded-lg", "flex","items-center")
+   ProPic.classList.add("ProPic","w-12","h-12","aspect-square","rounded-full","flex-none", "text-2xl","font-medium", "flex","justify-center", "items-center","text-white",`bg-[${organization.color}]`)
+   orgName.classList.add("ml-4","text-lg")
+  ProPic.textContent=organization.name.substr(0,1)
+  orgName.textContent=organization.name
+  container.appendChild(ProPic)
+  container.appendChild(orgName)
+  container.setAttribute("data-email",organization.org_email)
+  container.addEventListener("click",()=>{
+    choosenOrg=organization.org_email
+    toInput.value=organization.org_email
+    document.querySelector("#replyTo").querySelector("h1").textContent="To: "+organization.org_email
+    document.querySelectorAll(".organization").forEach(org=>{
+    org.classList.remove("bg-gray-200")
+    const checkMark=org.querySelector(".checkMark")
+    org.querySelector(".ProPic").classList.remove("hidden")
+    if(checkMark){
+      org.removeChild(checkMark)
+    }
+    
+    })
+    container.classList.add("bg-gray-200")
+    const cheacked=document.createElement("i")
+    cheacked.classList.add("fas","fa-cheack")
+    ProPic.classList.add("hidden")
+   const checkMark=document.createElement("div")
+   checkMark.classList.add("checkMark","w-12","h-12","aspect-square","rounded-full","flex-none", "text-2xl","font-medium", "flex","justify-center", "items-center","text-white",`bg-blue-400`)
+   checkMark.innerHTML=`<i class="fas fa-check"></i>`
+   container.prepend(checkMark)
+  })
+  if(organization.org_email===choosenOrg){
+        choosenOrg=organization.email
+    document.querySelectorAll(".organization").forEach(org=>{
+      
+    org.classList.remove("bg-gray-200")
+    const checkMark=org.querySelector(".checkMark")
+    org.querySelector(".ProPic").classList.remove("hidden")
+    if(checkMark){
+      org.removeChild(checkMark)
+    }
+    
+    })
+    container.classList.add("bg-gray-200")
+    const cheacked=document.createElement("i")
+    cheacked.classList.add("fas","fa-cheack")
+    ProPic.classList.add("hidden")
+   const checkMark=document.createElement("div")
+   checkMark.classList.add("checkMark","w-12","h-12","aspect-square","rounded-full","flex-none", "text-2xl","font-medium", "flex","justify-center", "items-center","text-white",`bg-blue-400`)
+   checkMark.innerHTML=`<i class="fas fa-check"></i>`
+   container.prepend(checkMark)
+  }
+  document.querySelector(".organizationsContainer").appendChild(container)
+   reciever_container.classList.remove("translate-y-full")
+   if(userInfo.message.email===organization.org_email){
+    container.classList.add("hidden") 
+   }
+
+   
+   })
+ }
+  })   
+  
+
+  document.querySelector(".hideMsgContainer").addEventListener("click",async()=>{
+    fetchMessages()
+    messagesContainer.classList.remove("hidden") 
+    messageShow.classList.add("hidden") 
+      })
+      
+  document.querySelector(".hide_chooser").addEventListener("click",()=>{
+    reciever_container.classList.add("translate-y-full")
+  })    
+  
+  reciever_container.addEventListener("click",(e)=>{
+    if(!e.target.classList.contains("org_search")){
+    reciever_container.classList.add("translate-y-full")
+    }
+  })    
+  
+  const repDescription=document.querySelector('.repDescription')
+  replayForm.addEventListener("submit",async(e)=>{
+    e.preventDefault()
+    if(toInput.value.trim()==="" || repMsg_id_input.value.trim()==="" || repDescription.value.trim()==""){
+      e.target.reportValidity()
+      return;
+    }
+    const repFd=new FormData(e.target)
+    const repMessage=Object.fromEntries(repFd.entries())
+    
+    const sendReply=await fetch("/sendReply",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify(repMessage)
+    })
+    const sendReplyMsg=await sendReply.json()
+    messageShow.classList.remove("hidden") 
+    replyContainer.classList.add("hidden") 
+    document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    toInput.value=""
+    
+    document.querySelector(`[data-draftId="${repMessage.msg_id}"]`).remove()
+  })
+  let forMsg="reply"
+  
+  let draftsData;
+  let draftsObj;
+  async function fetchDrafts(){
+   draftsData = await fetch("/getAllDrafts",{
+    method: "POST"
+    
+  });
+   draftsObj = await draftsData.json();
+   draftsObj.forEach(draft => {
+    // Create elements
+    const container1 = document.createElement("div");
+    const container2 = document.createElement("div");
+    const proPic = document.createElement("div");
+    const infoContainer = document.createElement("div");
+    const senderInfo = document.createElement("div");
+
+    const descContainer = document.createElement("p");
+
+    // Add classes
+    container1.classList.add(
+      "border-b", "border-b-gray-200", "flex", "flex-row",
+      "items-start", "w-full", "gap-3", "py-4", "message"
+    );
+
+    container2.classList.add("flex", "flex-col", "flex-1", "min-w-0");
+
+    proPic.classList.add("w-12","h-12","aspect-square","rounded-full","flex-none", "text-2xl","font-medium", "flex","justify-center", "items-center","text-white",`bg-indigo-500`);
+
+    infoContainer.classList.add("flex", "flex-col", "flex-1", "min-w-0");
+
+    senderInfo.classList.add("flex", "justify-between", "items-center", "mb-1");
+
+    descContainer.classList.add("text-sm", "text-gray-600", "truncate-2-lines", "mt-1");
+
+    // Fill text
+    descContainer.textContent = draft.message;
+    proPic.textContent=draft.fromrep.substr(0,1);
+    // Sender info
+    const date = new Date(draft.drafted_date);
+    const DateString=date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  });
+    senderInfo.innerHTML = `
+      <span class="font-medium text-lg text-red-400">Draft</span>
+      <span class="text-gray-700 text-sm">${DateString}</span>
+    `;
+    container1.setAttribute("data-draftId",draft.msg_id)
+    // Build structure
+    infoContainer.appendChild(senderInfo);
+    infoContainer.appendChild(descContainer);
+
+    container1.appendChild(proPic);
+    container1.appendChild(infoContainer);
+    
+  container1.addEventListener("click",function(){
+    opendMsg=draft.fromrep
+    fromInput.value=draft.fromrep
+    fromRep.textContent="From : "+draft.fromrep
+    
+    repMsg_id_input.value=draft.msg_id
+    repDescription.value=draft.message
+    if(draft.torep){
+      document.querySelector("#replyTo").querySelector("h1").textContent="To : "+draft.torep
+      toInput.value=draft.torep
+    }
+    replyContainer.classList.remove("hidden")
+  })
+    // Append to page
+  container1.addEventListener("mousedown",()=>{
+  
+  })
+    draftsDisplay.appendChild(container1);
+  });
+ }
+  fetchDrafts()   
+  
+  document.getElementById("replaybtn").addEventListener("click",()=>{
+   fetchDrafts()
+   const isDrafted=draftsObj.filter(draft=>{
+     return Number(draft.msg_id)===Number(opendMsgId);
+   }) 
+   if(isDrafted.length !==0){
+    fromInput.value=isDrafted[0].fromrep
+    fromRep.textContent="From : "+isDrafted[0].fromrep
+    
+    repMsg_id_input.value=isDrafted[0].msg_id
+    repDescription.value=isDrafted[0].message
+    if(isDrafted[0].torep){
+      document.querySelector("#replyTo").querySelector("h1").textContent="To : "+isDrafted[0].torep
+      toInput.value=isDrafted[0].torep
+    }
+   }
+   
+   messageShow.classList.add("hidden")
+   replyContainer.classList.remove("hidden")
+   fromRep.textContent="From : " + opendMsg
+   fromInput.value=opendMsg
+ }) 
+ document.querySelector(".hideReplyContainer").addEventListener("click",async()=>{
+
+   if(repDescription.value.trim() !=="" ){
+   const repFd=new FormData(replayForm)
+    const draftMessage=Object.fromEntries(repFd.entries())
+    const sendDraft=await fetch("/sendDraft",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify(draftMessage)
+    })
+    const sendDraftMsg=await sendDraft.json() 
+    }
+    messageShow.classList.remove("hidden") 
+    replyContainer.classList.add("hidden") 
+    document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+    draftsDisplay.innerHTML=""
+    fetchDrafts()
+      })
+ reback.addEventListener("click",()=>{
+   document.querySelector("#replyTo").querySelector("h1").textContent="To: "+opendMsg
+   toInput.value=opendMsg
+   
+ })
+ 
+ draftsLink.addEventListener("click",async()=>{
+   allBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600")
+        })
+    document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="draft"
+   draftsDisplay.innerHTML=""
+
+   fetchDrafts()
+   messagesParent.classList.add("hidden")
+   draftsContainer.classList.remove("hidden")
+ })
+ 
+ messagesLink.addEventListener("click",async()=>{
+   allBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+   unreadBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+   archivedBtn.forEach(rbtn=>{
+          rbtn.classList.remove("bg-blue-600","text-white")
+        })
+    document.querySelector("#replyTo").querySelector("h1").textContent="To : "
+    replayForm.reset()
+   forMsg="reply"
+   await fetchMessages()
+   messagesParent.classList.remove("hidden")
+   draftsContainer.classList.add("hidden")
+ })
+ 
+ document.querySelectorAll(".navLink").forEach((link,index,array)=>{
+   link.addEventListener("click",()=>{
+    array.forEach(linkBtn=>{
+      linkBtn.classList.remove("text-gray-500","scale-110")
+      linkBtn.classList.add("text-gray-500")
+    }) 
+    link.classList.remove("text-gray-500")
+    link.classList.remove("scale-110")
+   })
+ })
+ 
+  });
+  </script>
+</body>
+</html>
